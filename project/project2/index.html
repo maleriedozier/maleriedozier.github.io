@@ -1,0 +1,3331 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Malerie Dozier" />
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../../img/favicon.ico">
+    <title>Project 2: Modeling, Testing, and Predicting</title>
+    <meta name="generator" content="Hugo 0.79.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="../../css/main.css" />
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,200bold,400old" />
+    
+    <!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+    
+  </head>
+
+  <body>
+    <div id="wrap">
+      
+      <nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="../../"><i class="fa fa-home"></i></a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav navbar-right">
+      
+        
+        <li><a href="../../post/">BLOG</a></li>
+        
+        <li><a href="../../projects/">PROJECTS</a></li>
+        
+        <li><a href="../../resume/">RESUME</a></li>
+        
+      
+      </ul>
+    </div>
+  </div>
+</nav>
+
+      <div class="container">
+        <div class="blog-post">
+          <h3>
+            <strong><a href="../../project/project2/">Project 2: Modeling, Testing, and Predicting</a></strong>
+          </h3>
+        </div>
+ 
+<div class="blog-title">
+          <h4>
+         January 1, 0001 
+            &nbsp;&nbsp;
+            
+          </h4>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="blogpost">
+              
+
+
+<div id="modeling" class="section level1">
+<h1>Modeling</h1>
+<div id="instructions" class="section level2">
+<h2>Instructions</h2>
+<p>A knitted R Markdown document (preferably HTML) and the raw R Markdown file (as .Rmd) should both be submitted to Canvas by 11:59pm on the due date. These two documents will be graded jointly, so they must be consistent (i.e., don’t change the R Markdown file without also updating the knitted document). Knit an html copy too, for later! In the .Rmd file for Project 2, you can copy the first code-chunk into your project .Rmd file to get better formatting. Notice that you can adjust the opts_chunk$set(...) above to set certain parameters if necessary to make the knitting cleaner (you can globally set the size of all plots, etc). You can copy the set-up chunk in Project2.Rmd: I have gone ahead and set a few for you (such as disabling warnings and package-loading messges when knitting)!</p>
+<p>Like before, I envision your written text forming something of a narrative structure around your code/output. All results presented must have corresponding code. Any answers/results/plots etc. given without the corresponding R code that generated the result will not be graded. Furthermore, all code contained in our project document should work properly. Please do not include any extraneous code or code which produces error messages. (Code which produces warnings is fine as long as you understand what the warnings mean.)</p>
+</div>
+<div id="find-data" class="section level2">
+<h2>Find data:</h2>
+<p>Find one dataset with at least 5 variables (ideally more!) that you want to use to build models/test hypotheses. At least one should be categorical (with 2-5 groups, ideally; definitely fewer than 10) and at least two should be numeric (taking on more than 10 distinct values). Ideally, at least of your variables will be binary (if not, you will have to create one by discretizing a numeric or collapsing levels of a categorical). You will need a minimum of 40 observations (<em>at least</em> 10 observations for every explanatory variable you have, ideally 20+ observations/variable).</p>
+<p>It is perfectly fine to use either dataset (or the merged dataset, or a subset of your variables) from Project 1. However, I might encourage you to diversify things a bit and choose a different dataset to work with (particularly if the variables did not reveal interesting associations in Project 1 that you want to follow up with). The only requirement/restriction is that you may not use data from any examples we have done in class or lab. It would be a good idea to pick more cohesive data this time around (i.e., variables that you actually thing might have a relationship you would want to test). Think more along the lines of your Biostats project.</p>
+<p>Again, you can use data from anywhere you want (see bottom for resources)! If you want a quick way to see whether a built-in (R) dataset has binary and/or character (i.e., categorical) variables, check out this list: <a href="https://vincentarelbundock.github.io/Rdatasets/datasets.html" class="uri">https://vincentarelbundock.github.io/Rdatasets/datasets.html</a>.</p>
+</div>
+<div id="guidelines-and-rubric" class="section level2">
+<h2>Guidelines and Rubric</h2>
+<ul>
+<li><strong>0. (5 pts)</strong> Introduce your dataset and each of your variables (or just your main variables if you have lots) in a paragraph. What are they measuring? How many observations?</li>
+</ul>
+<p><em>The dataset continues with the theme of medical costs which I investigated in Project One. The variables in this set include: age (how old the individual is), sex (male or female), bmi (body mass index), children (number of children the individual has), if the individual is a smoker, and medical charges. There are 1338 observations in this dataset.</em></p>
+<ul>
+<li><strong>1. (15 pts)</strong> Perform a MANOVA testing whether any of your numeric variables (or a subset of them, if including them all is unreasonable or doesn't make sense) show a mean difference across levels of one of your categorical variables (3). If they do, perform univariate ANOVAs to find response(s) showing a mean difference across groups (3), and perform post-hoc t tests to find which groups differ (3). Discuss the number of tests you have performed, calculate the probability of at least one type I error (if unadjusted), and adjust the significance level accordingly (bonferroni correction) before discussing significant differences (3). Briefly discuss MANOVA assumptions and whether or not they are likely to have been met (no need for anything too in-depth) (2).</li>
+</ul>
+<pre class="r"><code>library(rstatix)
+library(tidyverse)
+library(lmtest)
+library(sandwich)
+insurance &lt;- read.csv(&quot;insurance.csv&quot;)
+#MANOVA 
+
+man1&lt;- manova(cbind(charges, bmi)~smoker, data=insurance)
+summary(man1)</code></pre>
+<pre><code>## Df Pillai approx F num Df den Df Pr(&gt;F)
+## smoker 1 0.64394 1207.2 2 1335 &lt; 2.2e-16 ***
+## Residuals 1336
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>summary.aov(man1)</code></pre>
+<pre><code>## Response charges :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## smoker 1 1.2152e+11 1.2152e+11 2177.6 &lt; 2.2e-16 ***
+## Residuals 1336 7.4554e+10 5.5804e+07
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Response bmi :
+## Df Sum Sq Mean Sq F value Pr(&gt;F)
+## smoker 1 1 0.699 0.0188 0.891
+## Residuals 1336 49720 37.215</code></pre>
+<pre class="r"><code>pairwise.t.test(insurance$charges, insurance$smoker, p.adjust = &quot;none&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with pooled SD 
+## 
+## data:  insurance$charges and insurance$smoker 
+## 
+##     no    
+## yes &lt;2e-16
+## 
+## P value adjustment method: none</code></pre>
+<pre class="r"><code>#Bonferroni Correction
+0.05/4</code></pre>
+<pre><code>## [1] 0.0125</code></pre>
+<pre class="r"><code>#MANOVA ASSUMPTIONS
+group &lt;- insurance$smoker
+DVs &lt;- insurance %&gt;% select(charges, bmi)
+sapply(split(DVs,group), mshapiro_test)</code></pre>
+<pre><code>##           no           yes         
+## statistic 0.8776897    0.9768343   
+## p.value   4.186891e-28 0.0001974155</code></pre>
+<pre class="r"><code>box_m(DVs, group)</code></pre>
+<pre><code>## # A tibble: 1 x 4
+## statistic p.value parameter method
+## &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1 384. 8.20e-83 3 Box&#39;s M-test for Homogeneity of
+Covariance Matrices</code></pre>
+<pre class="r"><code>lapply(split(DVs,group), cov)</code></pre>
+<pre><code>## $no
+##              charges       bmi
+## charges 35925420.496 3043.8953
+## bmi         3043.895   36.5192
+## 
+## $yes
+##              charges         bmi
+## charges 133207311.21 58814.15285
+## bmi         58814.15    39.92526</code></pre>
+<p><em>The null hypothesis of the MANOVA test states for both DVs (bmi, charges), means for smokers and nonsmokers are equal. The alternative hypothesis of the MANOVA test states for at least one DV, means for smokers and nonsmokers differ. The MANOVA p-value of 2.2e-16 is significant. Next, univariate ANOVAs were run to see which are significant. Mean charges differed significantly for smokers and nonsmokers (p-value = 2.2e-16). Mean bmi did not differ significantly between smokers and nonsmokers (p-value = 0.891). The post-hoc analysis determined the mean of charges differed significantly between smokers and nonsmokers. When adjusting for the bonferroni correction of 0.0125, the mean charges still differ significantly between smokers and non-smokers. The mutlivariate assumption was violated (p-value = 4.19e-28, p-value = 0.000197). </em></p>
+<ul>
+<li><strong>2. (10 pts)</strong> Perform some kind of randomization test on your data (that makes sense). The statistic can be anything you want (mean difference, correlation, F-statistic/ANOVA, chi-squared), etc. State null and alternative hypotheses, perform the test, and interpret the results (7). Create a plot visualizing the null distribution and the test statistic (3).</li>
+</ul>
+<pre class="r"><code>#t.test
+insurance%&gt;%group_by(smoker)%&gt;%summarize(s=sd(charges))%&gt;%summarize(diff(s))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   `diff(s)`
+##       &lt;dbl&gt;
+## 1     5548.</code></pre>
+<pre class="r"><code>rand_charge &lt;- vector()
+for(i in 1:5000){
+new&lt;-data.frame(charges=sample(insurance$charges),smoker=insurance$smoker)
+rand_charge[i]&lt;-mean(new[new$smoker==&quot;yes&quot;,]$charges)-
+mean(new[new$smoker==&quot;no&quot;,]$charges)
+}
+mean(rand_charge&lt; 5547.765 | rand_charge&gt; -5547.765 )</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>{hist(rand_charge,main=&quot;&quot;,ylab=&quot;&quot;); abline(v = c(13.7,-13.7),col=&quot;red&quot;)}</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" /> <em>The null hypothesis is the standard deviations of the charges variable do not differ for smokers and nonsmokers. The alternative hypothesis is that the standard deviations of the charges variable do differ between nonsmokers and smokers. Based on the p-value of 1, we fail to reject the null. The standard deviation of the charges variable for smokers and nonsmokers does not differ.</em></p>
+<ul>
+<li><strong>3. (35 pts)</strong> Build a linear regression model predicting one of your response variables from at least 2 other variables, including their interaction. Mean-center any numeric variables involved in the interaction.</li>
+</ul>
+<pre class="r"><code>library(lmtest)
+library(sandwich)
+insurance$age_c &lt;- insurance$age - mean(insurance$age, na.rm = T)
+insurance$children_c &lt;- insurance$children - mean(insurance$children, na.rm = T)
+insurance$charges_c &lt;- insurance$charges - mean(insurance$charges, na.rm = T)
+fit &lt;- lm(charges ~ age_c+children_c, data = insurance)
+summary(fit)</code></pre>
+<pre><code>##
+## Call:
+## lm(formula = charges ~ age_c + children_c, data =
+insurance)
+##
+## Residuals:
+## Min 1Q Median 3Q Max
+## -7450 -6623 -5979 5396 48451
+##
+## Coefficients:
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 13270.42 315.63 42.045 &lt;2e-16 ***
+## age_c 255.69 22.49 11.368 &lt;2e-16 ***
+## children_c 556.53 262.16 2.123 0.0339 *
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Residual standard error: 11550 on 1335 degrees of
+freedom
+## Multiple R-squared: 0.09247, Adjusted R-squared: 0.09111
+## F-statistic: 68.01 on 2 and 1335 DF, p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>insurance%&gt;%ggplot(aes(age_c, charges_c))+geom_point()+geom_smooth(method = &#39;lm&#39;,se=F)</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-3-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>insurance%&gt;%ggplot(aes(children_c, charges_c))+geom_point()+geom_smooth(method = &#39;lm&#39;,se=F)</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-3-2.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>resage &lt;- lm(charges ~ age, data = insurance)$residuals
+reschildren &lt;- lm(charges ~ children, data = insurance)$residuals
+
+coef(lm(resage ~ reschildren))</code></pre>
+<pre><code>##   (Intercept)   reschildren 
+## -1.016145e-12  9.110463e-01</code></pre>
+<pre class="r"><code>coeftest(fit, vcov. = vcovHC(fit))</code></pre>
+<pre><code>##
+## t test of coefficients:
+##
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 13270.422 315.950 42.0017 &lt; 2e-16 ***
+## age_c 255.695 22.419 11.4051 &lt; 2e-16 ***
+## children_c 556.527 246.042 2.2619 0.02386 *
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>bptest(fit)</code></pre>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  fit
+## BP = 0.0033371, df = 2, p-value = 0.9983</code></pre>
+<pre class="r"><code>resids&lt;-fit$residuals
+fitvals&lt;-fit$fitted.values
+shapiro.test(resids) </code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  resids
+## W = 0.64688, p-value &lt; 2.2e-16</code></pre>
+<pre class="r"><code>ks.test(resids, &quot;pnorm&quot;, mean=0, sd(resids)) </code></pre>
+<pre><code>## 
+##  One-sample Kolmogorov-Smirnov test
+## 
+## data:  resids
+## D = 0.3674, p-value &lt; 2.2e-16
+## alternative hypothesis: two-sided</code></pre>
+<pre class="r"><code>summary(fit)$r.sq</code></pre>
+<pre><code>## [1] 0.09246948</code></pre>
+<pre><code>- Interpret the coefficient estimates (do not discuss significance) (10)
+- Plot the regression using `ggplot()` using geom_smooth(method=&quot;lm&quot;). If your interaction is numeric by numeric, refer to code in the slides to make the plot or check out the `interactions` package, which makes this easier. If you have 3 or more predictors, just chose two of them to plot for convenience. (8)
+- Check assumptions of linearity, normality, and homoskedasticity either graphically or using a hypothesis test (4)
+- Regardless, recompute regression results with robust standard errors via `coeftest(..., vcov=vcovHC(...))`. Discuss significance of results, including any changes from before/after robust SEs if applicable. (8)
+- What proportion of the variation in the outcome does your model explain? (4)</code></pre>
+<p><em>A multiple regression was run. The null hypothesis states that when controlling for age, the number of children does not explain variance in medical charges. The second null hypothesis states that when controlling for children, age does not explain variance in medical charges. The alternative hypotheses state that when controlling for age, the number of children does explain the variance in medical charges and/or when controlling for children, age does explain the variance in medical charges. The predicted value of charges is -8.689e-13 when age and children is 0. The slope for age on charges is 2.557e+02 while holding children constant. The slope for children on charges is 5.565e+02 while holding age constant. The homoskedasticity assumption was met, however the normality assumption was not. The proportion of the variation in the outcome explained by this model is 0.092.</em></p>
+<ul>
+<li><strong>4. (5 pts)</strong> Rerun same regression model (with the interaction), but this time compute bootstrapped standard errors (either by resampling observations or residuals). Discuss any changes you observe in SEs and p-values using these SEs compared to the original SEs and the robust SEs)</li>
+</ul>
+<pre class="r"><code>fit&lt;-lm(charges_c~age_c+children_c,data=insurance)
+resids&lt;-fit$residuals
+fitted&lt;-fit$fitted.values
+
+resid_resamp&lt;-replicate(5000,{
+new_resids&lt;-sample(resids,replace=TRUE) 
+insurance$new_y&lt;-fitted+new_resids 
+fit&lt;-lm(new_y~age_c+children_c,data=insurance) 
+coef(fit)
+})
+
+resid_resamp%&gt;%t%&gt;%as.data.frame%&gt;%summarize_all(sd)</code></pre>
+<pre><code>##   (Intercept)   age_c children_c
+## 1    321.5597 22.6691    262.264</code></pre>
+<pre class="r"><code>resid_resamp%&gt;%t%&gt;%as.data.frame%&gt;%pivot_longer(1:3)%&gt;%group_by(name)%&gt;%
+summarize(lower=quantile(value,.025), upper=quantile(value,.975))</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   name         lower upper
+##   &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+## 1 (Intercept) -620.   644.
+## 2 age_c        210.   299.
+## 3 children_c    44.7 1090.</code></pre>
+<pre class="r"><code>coeftest(fit)</code></pre>
+<pre><code>##
+## t test of coefficients:
+##
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) -8.6886e-13 3.1563e+02 0.0000 1.00000
+## age_c 2.5569e+02 2.2493e+01 11.3676 &lt; 2e-16 ***
+## children_c 5.5653e+02 2.6216e+02 2.1229 0.03395 *
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>coeftest(fit, vcov=vcovHC(fit))</code></pre>
+<pre><code>##
+## t test of coefficients:
+##
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) -8.6886e-13 3.1595e+02 0.0000 1.00000
+## age_c 2.5569e+02 2.2419e+01 11.4051 &lt; 2e-16 ***
+## children_c 5.5653e+02 2.4604e+02 2.2619 0.02386 *
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>resid_resamp%&gt;%t%&gt;%as.data.frame%&gt;%summarize_all(sd)</code></pre>
+<pre><code>##   (Intercept)   age_c children_c
+## 1    321.5597 22.6691    262.264</code></pre>
+<p><em>Bootstrapped standard errors were computed by resampling residuals. </em></p>
+<ul>
+<li><strong>5. (25 pts)</strong> Fit a logistic regression model predicting a binary variable (if you don't have one, make/get one) from at least two explanatory variables (interaction not necessary).</li>
+</ul>
+<pre class="r"><code>#HERE&#39;S THE CLASSIFICAITON DIAGNOSTICS FUNCTION
+library(ggplot2)
+library(plotROC)
+class_diag&lt;-function(probs,truth){
+  tab&lt;-table(factor(probs&gt;.5,levels=c(&quot;FALSE&quot;,&quot;TRUE&quot;)),truth)
+  acc=sum(diag(tab))/sum(tab)
+  sens=tab[2,2]/colSums(tab)[2]
+  spec=tab[1,1]/colSums(tab)[1]
+  ppv=tab[2,2]/rowSums(tab)[2]
+  f1=2*(sens*ppv)/(sens+ppv)
+
+  if(is.numeric(truth)==FALSE &amp; is.logical(truth)==FALSE){
+    truth&lt;-as.numeric(truth)-1}
+  
+  #CALCULATE EXACT AUC
+  ord&lt;-order(probs, decreasing=TRUE)
+  probs &lt;- probs[ord]; truth &lt;- truth[ord]
+  
+  TPR=cumsum(truth)/max(1,sum(truth)) 
+  FPR=cumsum(!truth)/max(1,sum(!truth))
+  
+  dup&lt;-c(probs[-1]&gt;=probs[-length(probs)], FALSE)
+  TPR&lt;-c(0,TPR[!dup],1); FPR&lt;-c(0,FPR[!dup],1)
+  
+  n &lt;- length(TPR)
+  auc&lt;- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+
+  data.frame(acc,sens,spec,ppv,f1,auc)
+}
+
+mean(insurance$charges)</code></pre>
+<pre><code>## [1] 13270.42</code></pre>
+<pre class="r"><code>newinsurance &lt;- insurance %&gt;% mutate(highcharge = charges &gt; 13270.42) %&gt;% mutate(y=ifelse(highcharge==&quot;TRUE&quot;,1,0))
+fit&lt;-glm(y~children+age, data=newinsurance, family=&quot;binomial&quot;)
+coeftest(fit)</code></pre>
+<pre><code>##
+## z test of coefficients:
+##
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) -1.8010167 0.1941128 -9.2782 &lt; 2.2e-16 ***
+## children 0.0366133 0.0491571 0.7448 0.4564
+## age 0.0243986 0.0043044 5.6683 1.442e-08 ***
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>exp(coef(fit))</code></pre>
+<pre><code>## (Intercept)    children         age 
+##   0.1651309   1.0372919   1.0246986</code></pre>
+<pre class="r"><code>probs&lt;-predict(fit,type=&quot;response&quot;)
+summary(fit)</code></pre>
+<pre><code>##
+## Call:
+## glm(formula = y ~ children + age, family = &quot;binomial&quot;,
+data = newinsurance)
+##
+## Deviance Residuals:
+## Min 1Q Median 3Q Max
+## -1.0577 -0.9104 -0.7522 1.3128 1.7832
+##
+## Coefficients:
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) -1.801017 0.194113 -9.278 &lt; 2e-16 ***
+## children 0.036613 0.049157 0.745 0.456
+## age 0.024399 0.004304 5.668 1.44e-08 ***
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## (Dispersion parameter for binomial family taken to be 1)
+##
+## Null deviance: 1665.0 on 1337 degrees of freedom
+## Residual deviance: 1631.3 on 1335 degrees of freedom
+## AIC: 1637.3
+##
+## Number of Fisher Scoring iterations: 4</code></pre>
+<pre class="r"><code>table(truth=newinsurance$y, predict = as.numeric(probs&gt;.5))%&gt;%addmargins</code></pre>
+<pre><code>##      predict
+## truth    0  Sum
+##   0    918  918
+##   1    420  420
+##   Sum 1338 1338</code></pre>
+<pre class="r"><code>class_diag(probs, newinsurance$y)</code></pre>
+<pre><code>##         acc sens spec ppv  f1       auc
+## 1 0.6860987    0    1 NaN NaN 0.5983919</code></pre>
+<pre class="r"><code>newinsurance$logit&lt;-predict(fit,type=&quot;link&quot;)
+newinsurance%&gt;%ggplot(aes(logit,color=y,fill=y))+geom_density(alpha=.4)+
+theme(legend.position=c(.85,.85))+geom_vline(xintercept=0)+xlab(&quot;predictor (logit)&quot;)</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-5-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>ROCplot1 &lt;- ggplot(newinsurance)+geom_roc(aes(d=y, m=children), n.cuts=0)
+ROCplot1</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-5-2.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>calc_auc(ROCplot1)</code></pre>
+<pre><code>##   PANEL group       AUC
+## 1     1    -1 0.5156979</code></pre>
+<pre class="r"><code>ROCplot2 &lt;- ggplot(newinsurance)+geom_roc(aes(d=y, m=age), n.cuts=0)
+ROCplot2</code></pre>
+<p><img src="../../project/project2_files/figure-html/unnamed-chunk-5-3.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>calc_auc(ROCplot2)</code></pre>
+<pre><code>##   PANEL group       AUC
+## 1     1    -1 0.5957049</code></pre>
+<p><em>A binary variable was created by finding the mean of the charges column and classifying above the mean as high (1) and below as low (0).</em> - Interpret coefficient estimates in context (10) <em>For every 1 additional charge, the odds of children increase by 1.037. For every 1 additional charge, age increases by 1.024.</em> - Report a confusion matrix for your logistic regression (2) - Compute and discuss the Accuracy, Sensitivity (TPR), Specificity (TNR), Precision (PPV), and AUC of your model (5) <em>The accuracy is 0.686, the sensitivity is 0, the specificity is 1, and the AUC is 0.598 which is considered bad.</em> - Using ggplot, make a density plot of the log-odds (logit) colored/grouped by your binary outcome variable (3) - Generate an ROC curve (plot) and calculate AUC (either manually or with a package); interpret (5) <em>From the ROC plots, the AUC of children and the y is 0.516 and the AUC of age is 0.596.</em></p>
+<ul>
+<li><strong>6. (25 pts)</strong> Perform a logistic regression predicting the same binary response variable from <em>ALL</em> of the rest of your variables (the more, the better!)</li>
+</ul>
+<pre class="r"><code>#glm
+fit2&lt;-glm(y~region+smoker+bmi+sex, data=newinsurance, family=&quot;binomial&quot;)
+coeftest(fit2)</code></pre>
+<pre><code>##
+## z test of coefficients:
+##
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) -2.557724 0.494762 -5.1696 2.346e-07 ***
+## regionnorthwest -0.153953 0.243080 -0.6333 0.52651
+## regionsoutheast -0.300258 0.249407 -1.2039 0.22863
+## regionsouthwest -0.591668 0.263460 -2.2458 0.02472 *
+## smokeryes 7.542194 1.007560 7.4856 7.122e-14 ***
+## bmi 0.035777 0.015245 2.3468 0.01893 *
+## sexmale -0.292834 0.179642 -1.6301 0.10308
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>exp(coef(fit2))</code></pre>
+<pre><code>## (Intercept) regionnorthwest regionsoutheast
+regionsouthwest smokeryes bmi
+## 7.748088e-02 8.573123e-01 7.406271e-01 5.534034e-01
+1.885964e+03 1.036424e+00
+## sexmale
+## 7.461457e-01</code></pre>
+<pre class="r"><code>probs2&lt;-predict(fit2,type=&quot;response&quot;)
+summary(fit2)</code></pre>
+<pre><code>##
+## Call:
+## glm(formula = y ~ region + smoker + bmi + sex, family =
+&quot;binomial&quot;,
+## data = newinsurance)
+##
+## Deviance Residuals:
+## Min 1Q Median 3Q Max
+## -3.2604 -0.5581 -0.4869 0.0775 2.2818
+##
+## Coefficients:
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) -2.55772 0.49476 -5.170 2.35e-07 ***
+## regionnorthwest -0.15395 0.24308 -0.633 0.5265
+## regionsoutheast -0.30026 0.24941 -1.204 0.2286
+## regionsouthwest -0.59167 0.26346 -2.246 0.0247 *
+## smokeryes 7.54219 1.00756 7.486 7.12e-14 ***
+## bmi 0.03578 0.01524 2.347 0.0189 *
+## sexmale -0.29283 0.17964 -1.630 0.1031
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## (Dispersion parameter for binomial family taken to be 1)
+##
+## Null deviance: 1664.97 on 1337 degrees of freedom
+## Residual deviance: 855.07 on 1331 degrees of freedom
+## AIC: 869.07
+##
+## Number of Fisher Scoring iterations: 8</code></pre>
+<pre class="r"><code>class_diag(probs2, newinsurance$y)</code></pre>
+<pre><code>##         acc sens      spec       ppv        f1       auc
+## 1 0.8893871 0.65 0.9989107 0.9963504 0.7867435 0.8548462</code></pre>
+<pre class="r"><code>#10 fold CV
+set.seed(1234)
+k=10
+data1&lt;-newinsurance[sample(nrow(newinsurance)),] 
+folds&lt;-cut(seq(1:nrow(newinsurance)),breaks=k,labels=F)
+
+diags&lt;-NULL
+for(i in 1:k){    
+  train&lt;-data1[folds!=i,]
+  test&lt;-data1[folds==i,]
+  truth&lt;-test$y
+  
+  fit&lt;- glm(y~region+smoker+bmi+sex, data = newinsurance, family = &quot;binomial&quot;)
+  probs&lt;- predict(fit, newdata = test, type = &quot;response&quot;)
+  diags&lt;-rbind(diags,class_diag(probs, truth))
+}
+summarize_all(diags, mean)</code></pre>
+<pre><code>##         acc      sens      spec   ppv        f1     auc
+## 1 0.8893783 0.6486937 0.9989362 0.996 0.7846042 0.85333</code></pre>
+<pre class="r"><code>#LASSO
+library(glmnet)
+set.seed(1234)
+
+y &lt;- as.matrix(newinsurance$y)
+ins_preds &lt;- model.matrix(y~region+smoker+bmi+sex, data = newinsurance)[,-1]
+head(ins_preds)</code></pre>
+<pre><code>## regionnorthwest regionsoutheast regionsouthwest
+smokeryes bmi sexmale
+## 1 0 0 1 1 27.900 0
+## 2 0 1 0 0 33.770 1
+## 3 0 1 0 0 33.000 1
+## 4 1 0 0 0 22.705 1
+## 5 1 0 0 0 28.880 1
+## 6 0 1 0 0 25.740 0</code></pre>
+<pre class="r"><code>scale(ins_preds)</code></pre>
+<pre><code>## regionnorthwest regionsoutheast regionsouthwest
+smokeryes bmi sexmale
+## 1 -0.5662062 -0.6110952 1.7648211 1.9698501 -0.453150568
+-1.0101410
+## 2 -0.5662062 1.6351833 -0.5662062 -0.5072734 0.509430620
+0.9892209
+## 3 -0.5662062 1.6351833 -0.5662062 -0.5072734 0.383163582
+0.9892209
+## 4 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.305043118 0.9892209
+## 5 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.292447064 0.9892209
+## 6 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.807354207 -1.0101410
+## 7 -0.5662062 1.6351833 -0.5662062 -0.5072734 0.455316175
+-1.0101410
+## 8 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.479387874 -1.0101410
+## 9 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.136663056 0.9892209
+## 10 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.790955891 -1.0101410
+## 11 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.728642288 0.9892209
+## 12 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.717163466 -1.0101410
+## 13 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.612740015 0.9892209
+## 14 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.501528778 -1.0101410
+## 15 -0.5662062 1.6351833 -0.5662062 1.9698501 1.880329892
+0.9892209
+## 16 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.994295017 0.9892209
+## 17 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.019120952 -1.0101410
+## 18 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.118102308 0.9892209
+## 19 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.580240698 0.9892209
+## 20 -0.5662062 -0.6110952 1.7648211 1.9698501 0.760324865
+0.9892209
+## 21 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.875932997 -1.0101410
+## 22 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.284773682 -1.0101410
+## 23 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.563545065 0.9892209
+## 24 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.206061762 -1.0101410
+## 25 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.432652672 0.9892209
+## 26 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.482667538 -1.0101410
+## 27 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.242729515 -1.0101410
+## 28 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.346267369 -1.0101410
+## 29 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-2.177433564 0.9892209
+## 30 -0.5662062 -0.6110952 1.7648211 1.9698501 0.924308031
+0.9892209
+## 31 -0.5662062 -0.6110952 1.7648211 1.9698501 0.809519815
+0.9892209
+## 32 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.713063887 -1.0101410
+## 33 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.338362351 -1.0101410
+## 34 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.385917469 0.9892209
+## 35 -0.5662062 -0.6110952 1.7648211 1.9698501 0.940706348
+0.9892209
+## 36 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.678924738 0.9892209
+## 37 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.377424171 -1.0101410
+## 38 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.617431050 0.9892209
+## 39 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.984981803 0.9892209
+## 40 -0.5662062 -0.6110952 1.7648211 1.9698501 1.514647431
+0.9892209
+## 41 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.666328684 -1.0101410
+## 42 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.978422476 -1.0101410
+## 43 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.456727547 0.9892209
+## 44 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.022400615 -1.0101410
+## 45 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.047295406 0.9892209
+## 46 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.088291198 0.9892209
+## 47 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.312128220 -1.0101410
+## 48 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.673413787 -1.0101410
+## 49 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.005773839 -1.0101410
+## 50 -0.5662062 1.6351833 -0.5662062 1.9698501 0.743926548
+0.9892209
+## 51 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.813619394 -1.0101410
+## 52 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.486472977 -1.0101410
+## 53 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.436752251 0.9892209
+## 54 -0.5662062 1.6351833 -0.5662062 1.9698501 0.617659510
+0.9892209
+## 55 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.323603866 -1.0101410
+## 56 1.7648211 -0.6110952 -0.5662062 1.9698501 1.031717005
+0.9892209
+## 57 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.190483361 -1.0101410
+## 58 -0.5662062 1.6351833 -0.5662062 1.9698501 0.166705802
+0.9892209
+## 59 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.276346064 -1.0101410
+## 60 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.094030609 -1.0101410
+## 61 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.541701478 0.9892209
+## 62 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.491392472 0.9892209
+## 63 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.977896701 0.9892209
+## 64 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.775377490 -1.0101410
+## 65 1.7648211 -0.6110952 -0.5662062 1.9698501
+-1.351778320 -1.0101410
+## 66 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.289167401 -1.0101410
+## 67 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.383460898 -1.0101410
+## 68 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.713063887 0.9892209
+## 69 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.906269883 -1.0101410
+## 70 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.095964581 0.9892209
+## 71 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.969697542 -1.0101410
+## 72 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.354760668 0.9892209
+## 73 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.420353934 -1.0101410
+## 74 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.220820247 0.9892209
+## 75 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.535142151 0.9892209
+## 76 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.548786580 0.9892209
+## 77 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.176019016 -1.0101410
+## 78 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.798040993 0.9892209
+## 79 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.499069030 -1.0101410
+## 80 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.377424171 -1.0101410
+## 81 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.619593482 0.9892209
+## 82 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.249814617 -1.0101410
+## 83 -0.5662062 1.6351833 -0.5662062 1.9698501 1.140765811
+0.9892209
+## 84 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.732745042 -1.0101410
+## 85 -0.5662062 -0.6110952 1.7648211 1.9698501 0.678333282
+-1.0101410
+## 86 1.7648211 -0.6110952 -0.5662062 1.9698501
+-1.273886316 0.9892209
+## 87 1.7648211 -0.6110952 -0.5662062 1.9698501 0.081434555
+-1.0101410
+## 88 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.567938784 -1.0101410
+## 89 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.479387874 -1.0101410
+## 90 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.604015081 -1.0101410
+## 91 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.447414333 -1.0101410
+## 92 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.962318300 -1.0101410
+## 93 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.136663056 0.9892209
+## 94 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.673413787 0.9892209
+## 95 -0.5662062 -0.6110952 1.7648211 1.9698501 0.104392199
+-1.0101410
+## 96 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.140765811 -1.0101410
+## 97 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.022400615 -1.0101410
+## 98 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.248994701 0.9892209
+## 99 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.756816742 0.9892209
+## 100 -0.5662062 -0.6110952 1.7648211 1.9698501
+-1.863405800 0.9892209
+## 101 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.153587149 -1.0101410
+## 102 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.853269494 0.9892209
+## 103 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.089927854 -1.0101410
+## 104 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.121904571 -1.0101410
+## 105 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.518743834 -1.0101410
+## 106 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.432652672 0.9892209
+## 107 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.371158984 -1.0101410
+## 108 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.034699353 0.9892209
+## 109 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.446591241 0.9892209
+## 110 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.725888400 0.9892209
+## 111 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.486472977 0.9892209
+## 112 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.157980868 -1.0101410
+## 113 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.022400615 0.9892209
+## 114 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.829197795 -1.0101410
+## 115 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.252796964 0.9892209
+## 116 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.339182267 0.9892209
+## 117 -0.5662062 1.6351833 -0.5662062 -0.5072734
+3.016733237 0.9892209
+## 118 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.446591241 -1.0101410
+## 119 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.572858279 -1.0101410
+## 120 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.195994312 -1.0101410
+## 121 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.055494565 0.9892209
+## 122 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.133680709 0.9892209
+## 123 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.276868664 -1.0101410
+## 124 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.112591357 0.9892209
+## 125 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.533208179 -1.0101410
+## 126 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.308025465 -1.0101410
+## 127 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.387557301 -1.0101410
+## 128 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.104689515 -1.0101410
+## 129 1.7648211 -0.6110952 -0.5662062 1.9698501
+-2.115119961 -1.0101410
+## 130 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.661934965 0.9892209
+## 131 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.681907085 -1.0101410
+## 132 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.414091924 -1.0101410
+## 133 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.858714765 -1.0101410
+## 134 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.837691093 0.9892209
+## 135 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.308025465 -1.0101410
+## 136 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.428553093 -1.0101410
+## 137 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.563545065 0.9892209
+## 138 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.900004697 0.9892209
+## 139 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.202782099 -1.0101410
+## 140 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.875113081 -1.0101410
+## 141 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.351778320 0.9892209
+## 142 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.299532167 0.9892209
+## 143 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.879506801 0.9892209
+## 144 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.152241457 0.9892209
+## 145 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.323603866 0.9892209
+## 146 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.339185443 -1.0101410
+## 147 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.027614251 0.9892209
+## 148 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.158803959 -1.0101410
+## 149 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.109609010 -1.0101410
+## 150 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.371158984 0.9892209
+## 151 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.071367106 0.9892209
+## 152 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.157980868 0.9892209
+## 153 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.062873807 -1.0101410
+## 154 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.195994312 -1.0101410
+## 155 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.853269494 -1.0101410
+## 156 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.452333828 0.9892209
+## 157 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.023811987 0.9892209
+## 158 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.900004697 0.9892209
+## 159 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.798040993 0.9892209
+## 160 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.464629389 -1.0101410
+## 161 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.666328684 -1.0101410
+## 162 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.014498773 -1.0101410
+## 163 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.465452481 0.9892209
+## 164 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.141582551 -1.0101410
+## 165 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.167819858 0.9892209
+## 166 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.401495870 0.9892209
+## 167 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.039096248 -1.0101410
+## 168 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.408580973 -1.0101410
+## 169 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.190483361 -1.0101410
+## 170 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.928179151 0.9892209
+## 171 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.772101002 0.9892209
+## 172 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.059590968 0.9892209
+## 173 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-2.411109576 0.9892209
+## 174 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.678333282 -1.0101410
+## 175 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.439737774 -1.0101410
+## 176 -0.5662062 -0.6110952 1.7648211 1.9698501
+1.153884465 -1.0101410
+## 177 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.463809474 0.9892209
+## 178 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.239972451 0.9892209
+## 179 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.289167401 -1.0101410
+## 180 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.408580973 -1.0101410
+## 181 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.339182267 0.9892209
+## 182 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.248994701 -1.0101410
+## 183 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.756816742 0.9892209
+## 184 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.697485486 -1.0101410
+## 185 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.004362467 0.9892209
+## 186 -0.5662062 -0.6110952 -0.5662062 1.9698501
+1.841793848 0.9892209
+## 187 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.121904571 -1.0101410
+## 188 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.038798932 -1.0101410
+## 189 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.251977048 -1.0101410
+## 190 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.237218563 -1.0101410
+## 191 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.148667654 0.9892209
+## 192 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.731921951 -1.0101410
+## 193 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.807354207 0.9892209
+## 194 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.666328684 -1.0101410
+## 195 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.617659510 0.9892209
+## 196 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.012035850 0.9892209
+## 197 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.350366948 -1.0101410
+## 198 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.338362351 -1.0101410
+## 199 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-2.068384758 -1.0101410
+## 200 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.421177026 -1.0101410
+## 201 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.237218563 -1.0101410
+## 202 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.256896543 -1.0101410
+## 203 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.086945506 -1.0101410
+## 204 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.888231735 -1.0101410
+## 205 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.371456300 0.9892209
+## 206 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.292447064 -1.0101410
+## 207 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.699125318 0.9892209
+## 208 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.479387874 0.9892209
+## 209 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.186383782 -1.0101410
+## 210 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.732745042 0.9892209
+## 211 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.383163582 0.9892209
+## 212 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.034699353 0.9892209
+## 213 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.354760668 0.9892209
+## 214 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.645010873 -1.0101410
+## 215 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.038798932 -1.0101410
+## 216 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.055494565 -1.0101410
+## 217 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.666328684 -1.0101410
+## 218 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.240269767 0.9892209
+## 219 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.121904571 -1.0101410
+## 220 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.222231619 -1.0101410
+## 221 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.497951798 -1.0101410
+## 222 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.424159373 -1.0101410
+## 223 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.022400615 0.9892209
+## 224 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.678333282 0.9892209
+## 225 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.987735691 0.9892209
+## 226 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.527468768 0.9892209
+## 227 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.212918404 0.9892209
+## 228 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.844253596 -1.0101410
+## 229 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.159326559 -1.0101410
+## 230 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.853269494 0.9892209
+## 231 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.907089799 -1.0101410
+## 232 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.464629389 -1.0101410
+## 233 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-2.109380550 -1.0101410
+## 234 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.518743834 0.9892209
+## 235 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.009053502 0.9892209
+## 236 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.384574954 -1.0101410
+## 237 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.645010873 -1.0101410
+## 238 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.267032849 0.9892209
+## 239 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.261290263 0.9892209
+## 240 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.212918404 0.9892209
+## 241 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.984981803 -1.0101410
+## 242 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.398513523 -1.0101410
+## 243 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.633532051 -1.0101410
+## 244 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.760324865 0.9892209
+## 245 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.479387874 -1.0101410
+## 246 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.105506255 0.9892209
+## 247 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.212918404 -1.0101410
+## 248 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.852155438 0.9892209
+## 249 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.601032734 0.9892209
+## 250 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.276868664 0.9892209
+## 251 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-2.193011965 0.9892209
+## 252 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.251977048 -1.0101410
+## 253 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.581583213 0.9892209
+## 254 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.059590968 0.9892209
+## 255 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.190483361 0.9892209
+## 256 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.868847895 -1.0101410
+## 257 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.486472977 0.9892209
+## 258 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.555643223 -1.0101410
+## 259 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.024631903 0.9892209
+## 260 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.206061762 0.9892209
+## 261 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.895905117 -1.0101410
+## 262 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.626972724 -1.0101410
+## 263 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.040210304 0.9892209
+## 264 1.7648211 -0.6110952 -0.5662062 1.9698501
+1.031717005 0.9892209
+## 265 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.212918404 -1.0101410
+## 266 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.916406189 0.9892209
+## 267 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.781414217 0.9892209
+## 268 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.283953766 -1.0101410
+## 269 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.075989285 0.9892209
+## 270 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.790955891 0.9892209
+## 271 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.212095313 0.9892209
+## 272 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.579943382 0.9892209
+## 273 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.047295406 0.9892209
+## 274 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.526123077 0.9892209
+## 275 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.510544676 0.9892209
+## 276 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.666328684 -1.0101410
+## 277 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.647767936 0.9892209
+## 278 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.043489967 -1.0101410
+## 279 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.184743950 0.9892209
+## 280 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.492803844 -1.0101410
+## 281 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.417074271 -1.0101410
+## 282 -0.5662062 -0.6110952 -0.5662062 1.9698501
+1.623696237 0.9892209
+## 283 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.494966275 0.9892209
+## 284 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.283953766 -1.0101410
+## 285 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.087993882 -1.0101410
+## 286 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.663049021 0.9892209
+## 287 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+2.854389902 -1.0101410
+## 288 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.728642288 -1.0101410
+## 289 -0.5662062 -0.6110952 -0.5662062 1.9698501
+1.000560204 -1.0101410
+## 290 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.699125318 0.9892209
+## 291 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.448756848 -1.0101410
+## 292 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.167819858 0.9892209
+## 293 -0.5662062 1.6351833 -0.5662062 1.9698501
+2.439512490 0.9892209
+## 294 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.302286054 -1.0101410
+## 295 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.633532051 0.9892209
+## 296 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.258307915 0.9892209
+## 297 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.485947201 0.9892209
+## 298 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.861468652 0.9892209
+## 299 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.611100183 0.9892209
+## 300 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.292447064 -1.0101410
+## 301 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.510544676 0.9892209
+## 302 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.320621519 -1.0101410
+## 303 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.122727663 -1.0101410
+## 304 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.383163582 -1.0101410
+## 305 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.203079414 -1.0101410
+## 306 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.439737774 0.9892209
+## 307 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.518743834 -1.0101410
+## 308 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.437278027 -1.0101410
+## 309 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.688992187 0.9892209
+## 310 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.393002572 -1.0101410
+## 311 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.666328684 0.9892209
+## 312 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.977896701 -1.0101410
+## 313 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.870193586 0.9892209
+## 314 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.852155438 0.9892209
+## 315 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.120790515 -1.0101410
+## 316 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.424159373 0.9892209
+## 317 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.252796964 0.9892209
+## 318 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.346267369 0.9892209
+## 319 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.494966275 -1.0101410
+## 320 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.094030609 0.9892209
+## 321 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.884426296 0.9892209
+## 322 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.167819858 -1.0101410
+## 323 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.022400615 0.9892209
+## 324 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.686009840 0.9892209
+## 325 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.567938784 0.9892209
+## 326 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.564364981 0.9892209
+## 327 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.222231619 -1.0101410
+## 328 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.953825001 0.9892209
+## 329 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.514350115 -1.0101410
+## 330 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.989901298 0.9892209
+## 331 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.938246600 -1.0101410
+## 332 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.541701478 0.9892209
+## 333 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.081434555 -1.0101410
+## 334 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.308025465 -1.0101410
+## 335 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.829197795 -1.0101410
+## 336 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.629138332 0.9892209
+## 337 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.807354207 0.9892209
+## 338 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.510544676 0.9892209
+## 339 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.268375365 0.9892209
+## 340 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.482667538 -1.0101410
+## 341 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.502345518 -1.0101410
+## 342 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.105506255 0.9892209
+## 343 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.510544676 -1.0101410
+## 344 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.000560204 0.9892209
+## 345 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.772101002 -1.0101410
+## 346 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.230133461 -1.0101410
+## 347 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.834117290 0.9892209
+## 348 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.439737774 0.9892209
+## 349 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.121904571 -1.0101410
+## 350 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.463809474 0.9892209
+## 351 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.227151114 -1.0101410
+## 352 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.830311851 -1.0101410
+## 353 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.485947201 -1.0101410
+## 354 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.751305791 0.9892209
+## 355 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.248994701 -1.0101410
+## 356 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.502345518 0.9892209
+## 357 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.168940265 0.9892209
+## 358 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.136663056 0.9892209
+## 359 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.844253596 0.9892209
+## 360 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.619070882 -1.0101410
+## 361 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.268375365 -1.0101410
+## 362 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.026794335 0.9892209
+## 363 -0.5662062 -0.6110952 1.7648211 1.9698501
+-1.469846200 -1.0101410
+## 364 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.699125318 -1.0101410
+## 365 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.438689399 -1.0101410
+## 366 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.019120952 -1.0101410
+## 367 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.268375365 -1.0101410
+## 368 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.931161498 -1.0101410
+## 369 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.221640163 0.9892209
+## 370 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.043192651 0.9892209
+## 371 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.569875932 -1.0101410
+## 372 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.382935122 -1.0101410
+## 373 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.408580973 -1.0101410
+## 374 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.366765265 0.9892209
+## 375 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.437278027 0.9892209
+## 376 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.385917469 -1.0101410
+## 377 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.946739899 -1.0101410
+## 378 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.555643223 0.9892209
+## 379 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.089927854 -1.0101410
+## 380 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.130629505 0.9892209
+## 381 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-2.083963159 -1.0101410
+## 382 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.003542551 0.9892209
+## 383 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.383163582 0.9892209
+## 384 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.078749524 -1.0101410
+## 385 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.398513523 0.9892209
+## 386 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.612740015 0.9892209
+## 387 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.375261739 -1.0101410
+## 388 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.868847895 0.9892209
+## 389 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.320621519 -1.0101410
+## 390 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.074349453 -1.0101410
+## 391 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.813619394 0.9892209
+## 392 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.109609010 -1.0101410
+## 393 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.128169758 0.9892209
+## 394 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.112591357 0.9892209
+## 395 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.268375365 -1.0101410
+## 396 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.772395143 0.9892209
+## 397 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.612740015 -1.0101410
+## 398 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.058476912 0.9892209
+## 399 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.830311851 0.9892209
+## 400 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.230956553 -1.0101410
+## 401 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.650227684 -1.0101410
+## 402 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.764199160 0.9892209
+## 403 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.377424171 -1.0101410
+## 404 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.268375365 0.9892209
+## 405 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.683024317 0.9892209
+## 406 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.265393018 -1.0101410
+## 407 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.041850136 -1.0101410
+## 408 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.158278184 -1.0101410
+## 409 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.564956437 0.9892209
+## 410 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.103866423 0.9892209
+## 411 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-2.161855163 0.9892209
+## 412 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.710081539 -1.0101410
+## 413 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-2.208590366 -1.0101410
+## 414 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.109083234 0.9892209
+## 415 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.735727390 -1.0101410
+## 416 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.816079141 -1.0101410
+## 417 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.563545065 0.9892209
+## 418 -0.5662062 -0.6110952 1.7648211 1.9698501
+-1.322261350 -1.0101410
+## 419 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.393299888 0.9892209
+## 420 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.604015081 -1.0101410
+## 421 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.527468768 0.9892209
+## 422 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.852155438 0.9892209
+## 423 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.346267369 0.9892209
+## 424 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.012035850 0.9892209
+## 425 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.075989285 0.9892209
+## 426 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.041850136 0.9892209
+## 427 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.557279878 -1.0101410
+## 428 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.245711862 -1.0101410
+## 429 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-2.270903969 -1.0101410
+## 430 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.043192651 -1.0101410
+## 431 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.399561898 0.9892209
+## 432 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.710081539 -1.0101410
+## 433 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.617133734 0.9892209
+## 434 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.026794335 -1.0101410
+## 435 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.339182267 0.9892209
+## 436 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.401201730 0.9892209
+## 437 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.174904960 0.9892209
+## 438 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.289167401 0.9892209
+## 439 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.637932122 -1.0101410
+## 440 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.198976660 0.9892209
+## 441 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.330688968 -1.0101410
+## 442 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.465155165 -1.0101410
+## 443 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.024635079 0.9892209
+## 444 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.960384328 -1.0101410
+## 445 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.650750283 0.9892209
+## 446 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.399561898 -1.0101410
+## 447 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.167819858 0.9892209
+## 448 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.822112692 -1.0101410
+## 449 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.174379185 -1.0101410
+## 450 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.301469314 0.9892209
+## 451 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.174379185 0.9892209
+## 452 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.071367106 0.9892209
+## 453 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.191074817 0.9892209
+## 454 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.152241457 0.9892209
+## 455 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.601855825 0.9892209
+## 456 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.104689515 0.9892209
+## 457 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.085828275 -1.0101410
+## 458 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.027614251 -1.0101410
+## 459 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.465452481 0.9892209
+## 460 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.383163582 -1.0101410
+## 461 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.978422476 -1.0101410
+## 462 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.108785918 0.9892209
+## 463 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.218657815 -1.0101410
+## 464 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.775377490 0.9892209
+## 465 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.900004697 0.9892209
+## 466 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.374438648 -1.0101410
+## 467 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.321964034 -1.0101410
+## 468 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.517629778 -1.0101410
+## 469 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.040210304 -1.0101410
+## 470 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.077926432 -1.0101410
+## 471 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.329049137 0.9892209
+## 472 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.089927854 -1.0101410
+## 473 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.141582551 -1.0101410
+## 474 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.439737774 -1.0101410
+## 475 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.912303434 0.9892209
+## 476 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.385917469 0.9892209
+## 477 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.354760668 0.9892209
+## 478 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.813619394 0.9892209
+## 479 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.014498773 0.9892209
+## 480 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.311010988 0.9892209
+## 481 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.748323443 0.9892209
+## 482 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.122727663 0.9892209
+## 483 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.112591357 -1.0101410
+## 484 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.449054164 -1.0101410
+## 485 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.596341698 0.9892209
+## 486 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.065856154 -1.0101410
+## 487 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.507562329 -1.0101410
+## 488 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.321964034 0.9892209
+## 489 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.212918404 -1.0101410
+## 490 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.081434555 0.9892209
+## 491 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.366765265 -1.0101410
+## 492 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.915583097 -1.0101410
+## 493 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.915583097 -1.0101410
+## 494 -0.5662062 -0.6110952 1.7648211 -0.5072734
+2.088588514 0.9892209
+## 495 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.813913534 0.9892209
+## 496 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.448231073 0.9892209
+## 497 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.158278184 -1.0101410
+## 498 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.321964034 0.9892209
+## 499 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.095964581 -1.0101410
+## 500 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.399859214 -1.0101410
+## 501 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.612740015 0.9892209
+## 502 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.759799089 0.9892209
+## 503 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.222231619 0.9892209
+## 504 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.067790126 0.9892209
+## 505 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.284247906 -1.0101410
+## 506 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.034699353 0.9892209
+## 507 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.112591357 0.9892209
+## 508 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.133680709 0.9892209
+## 509 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.884426296 -1.0101410
+## 510 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.321964034 -1.0101410
+## 511 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.237218563 0.9892209
+## 512 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.491392472 0.9892209
+## 513 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.351778320 0.9892209
+## 514 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.043192651 0.9892209
+## 515 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.387557301 0.9892209
+## 516 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.825918131 0.9892209
+## 517 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.761964696 0.9892209
+## 518 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.027614251 0.9892209
+## 519 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.055197249 -1.0101410
+## 520 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.034699353 0.9892209
+## 521 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.541701478 -1.0101410
+## 522 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.223054710 -1.0101410
+## 523 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.533208179 -1.0101410
+## 524 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.158803959 -1.0101410
+## 525 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.753239762 0.9892209
+## 526 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.527468768 -1.0101410
+## 527 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.012035850 -1.0101410
+## 528 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.797515217 -1.0101410
+## 529 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.436755427 0.9892209
+## 530 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.853269494 0.9892209
+## 531 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.880329892 0.9892209
+## 532 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.174904960 -1.0101410
+## 533 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.157980868 0.9892209
+## 534 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.906269883 0.9892209
+## 535 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.609757668 0.9892209
+## 536 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.432652672 0.9892209
+## 537 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.350664264 -1.0101410
+## 538 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.075989285 -1.0101410
+## 539 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.428553093 -1.0101410
+## 540 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.112591357 0.9892209
+## 541 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.203079414 -1.0101410
+## 542 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.184743950 -1.0101410
+## 543 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.924308031 -1.0101410
+## 544 -0.5662062 1.6351833 -0.5662062 1.9698501
+2.746161012 -1.0101410
+## 545 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.074349453 0.9892209
+## 546 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.790955891 0.9892209
+## 547 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.782462592 0.9892209
+## 548 -0.5662062 -0.6110952 1.7648211 -0.5072734
+2.629732963 -1.0101410
+## 549 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.339182267 -1.0101410
+## 550 -0.5662062 1.6351833 -0.5662062 1.9698501
+2.547741380 -1.0101410
+## 551 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.022400615 0.9892209
+## 552 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.284247906 -1.0101410
+## 553 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.519041150 0.9892209
+## 554 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.174904960 -1.0101410
+## 555 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.748323443 -1.0101410
+## 556 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.125481551 0.9892209
+## 557 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.455316175 0.9892209
+## 558 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.581583213 0.9892209
+## 559 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.564364981 -1.0101410
+## 560 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.798040993 0.9892209
+## 561 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.756816742 -1.0101410
+## 562 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.330688968 -1.0101410
+## 563 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.026794335 0.9892209
+## 564 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.313245452 0.9892209
+## 565 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.238858395 -1.0101410
+## 566 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.027614251 -1.0101410
+## 567 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.623696237 -1.0101410
+## 568 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.012035850 0.9892209
+## 569 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.202782099 -1.0101410
+## 570 1.7648211 -0.6110952 -0.5662062 1.9698501
+1.623696237 0.9892209
+## 571 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.256370768 -1.0101410
+## 572 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.086651366 -1.0101410
+## 573 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.042673227 -1.0101410
+## 574 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.016138605 -1.0101410
+## 575 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.595521782 -1.0101410
+## 576 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.572858279 -1.0101410
+## 577 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.626972724 0.9892209
+## 578 -0.5662062 -0.6110952 -0.5662062 1.9698501
+1.218657815 -1.0101410
+## 579 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.075989285 0.9892209
+## 580 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.180415911 -1.0101410
+## 581 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.853269494 0.9892209
+## 582 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.012035850 0.9892209
+## 583 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.421474342 0.9892209
+## 584 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.150079026 -1.0101410
+## 585 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.633829367 0.9892209
+## 586 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.392476796 -1.0101410
+## 587 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.710081539 0.9892209
+## 588 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.074349453 -1.0101410
+## 589 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.860354596 -1.0101410
+## 590 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.004362467 -1.0101410
+## 591 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.272769084 -1.0101410
+## 592 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.819130345 0.9892209
+## 593 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.076515060 0.9892209
+## 594 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.445248725 -1.0101410
+## 595 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.573681371 0.9892209
+## 596 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.502051377 -1.0101410
+## 597 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.194057165 -1.0101410
+## 598 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.424159373 -1.0101410
+## 599 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.317570315 0.9892209
+## 600 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.125187410 -1.0101410
+## 601 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.393299888 -1.0101410
+## 602 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.159326559 0.9892209
+## 603 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.879506801 -1.0101410
+## 604 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.375261739 -1.0101410
+## 605 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.385917469 -1.0101410
+## 606 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.563545065 -1.0101410
+## 607 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.900004697 -1.0101410
+## 608 1.7648211 -0.6110952 -0.5662062 1.9698501
+-1.149259110 -1.0101410
+## 609 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.604015081 0.9892209
+## 610 -0.5662062 -0.6110952 1.7648211 1.9698501
+1.170282781 0.9892209
+## 611 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.212095313 -1.0101410
+## 612 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.678333282 -1.0101410
+## 613 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.408580973 -1.0101410
+## 614 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.912600750 -1.0101410
+## 615 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.383163582 -1.0101410
+## 616 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.978422476 -1.0101410
+## 617 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.339182267 -1.0101410
+## 618 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.830311851 0.9892209
+## 619 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.401201730 -1.0101410
+## 620 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.055494565 -1.0101410
+## 621 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.120790515 0.9892209
+## 622 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.563545065 0.9892209
+## 623 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.535439467 -1.0101410
+## 624 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.470894576 0.9892209
+## 625 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.308025465 0.9892209
+## 626 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.759799089 -1.0101410
+## 627 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.292447064 0.9892209
+## 628 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.934444337 0.9892209
+## 629 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.203079414 0.9892209
+## 630 1.7648211 -0.6110952 -0.5662062 1.9698501
+1.358863423 -1.0101410
+## 631 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.891511398 0.9892209
+## 632 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.223574135 0.9892209
+## 633 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.798040993 -1.0101410
+## 634 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.305043118 0.9892209
+## 635 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.481850798 0.9892209
+## 636 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.234236216 0.9892209
+## 637 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.009053502 -1.0101410
+## 638 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.218657815 -1.0101410
+## 639 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.697485486 0.9892209
+## 640 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.491392472 0.9892209
+## 641 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.924605347 0.9892209
+## 642 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.385917469 0.9892209
+## 643 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.533208179 0.9892209
+## 644 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.704570588 -1.0101410
+## 645 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.761964696 0.9892209
+## 646 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.019120952 0.9892209
+## 647 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.728642288 0.9892209
+## 648 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.195994312 -1.0101410
+## 649 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.354760668 0.9892209
+## 650 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.377424171 -1.0101410
+## 651 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.970520634 -1.0101410
+## 652 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.465452481 -1.0101410
+## 653 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.076515060 -1.0101410
+## 654 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.924308031 -1.0101410
+## 655 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.743926548 -1.0101410
+## 656 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.879506801 -1.0101410
+## 657 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.924605347 -1.0101410
+## 658 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.408580973 0.9892209
+## 659 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.860354596 -1.0101410
+## 660 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.308025465 -1.0101410
+## 661 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.601855825 0.9892209
+## 662 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.095964581 -1.0101410
+## 663 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.143748159 -1.0101410
+## 664 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.491392472 0.9892209
+## 665 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.258307915 -1.0101410
+## 666 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.212918404 0.9892209
+## 667 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.321964034 0.9892209
+## 668 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.346267369 -1.0101410
+## 669 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.221640163 0.9892209
+## 670 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.139942720 -1.0101410
+## 671 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.148667654 0.9892209
+## 672 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.081434555 -1.0101410
+## 673 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.157980868 0.9892209
+## 674 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.058476912 -1.0101410
+## 675 -0.5662062 1.6351833 -0.5662062 1.9698501
+2.168940265 -1.0101410
+## 676 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.523140729 0.9892209
+## 677 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.663872112 -1.0101410
+## 678 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.112591357 0.9892209
+## 679 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.891511398 0.9892209
+## 680 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.227151114 -1.0101410
+## 681 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-2.174973816 -1.0101410
+## 682 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.699422633 0.9892209
+## 683 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.760324865 0.9892209
+## 684 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.040210304 0.9892209
+## 685 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.994592333 -1.0101410
+## 686 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.697485486 0.9892209
+## 687 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.744220688 0.9892209
+## 688 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.808177299 0.9892209
+## 689 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.076286601 -1.0101410
+## 690 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.076515060 0.9892209
+## 691 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.541701478 0.9892209
+## 692 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.907909715 0.9892209
+## 693 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.283953766 0.9892209
+## 694 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.149259110 0.9892209
+## 695 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.678333282 -1.0101410
+## 696 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.561382633 -1.0101410
+## 697 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.268375365 -1.0101410
+## 698 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.834117290 0.9892209
+## 699 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.502051377 0.9892209
+## 700 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.411338036 -1.0101410
+## 701 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.689812103 -1.0101410
+## 702 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+2.309145873 -1.0101410
+## 703 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.772101002 0.9892209
+## 704 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.697485486 -1.0101410
+## 705 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.183398259 -1.0101410
+## 706 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.366765265 -1.0101410
+## 707 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.212918404 -1.0101410
+## 708 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.323603866 0.9892209
+## 709 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.027614251 -1.0101410
+## 710 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.479387874 -1.0101410
+## 711 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.743926548 0.9892209
+## 712 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.168117174 -1.0101410
+## 713 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.003542551 -1.0101410
+## 714 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.608117836 0.9892209
+## 715 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.322261350 -1.0101410
+## 716 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.289167401 0.9892209
+## 717 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.320621519 -1.0101410
+## 718 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.040210304 0.9892209
+## 719 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.984981803 -1.0101410
+## 720 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.455316175 -1.0101410
+## 721 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.639274637 -1.0101410
+## 722 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.973502981 0.9892209
+## 723 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.104689515 0.9892209
+## 724 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.776723181 0.9892209
+## 725 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.588436680 -1.0101410
+## 726 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.375261739 -1.0101410
+## 727 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.370339069 0.9892209
+## 728 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.460827126 -1.0101410
+## 729 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.576961034 -1.0101410
+## 730 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.888231735 -1.0101410
+## 731 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.023811987 0.9892209
+## 732 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.519041150 0.9892209
+## 733 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.092387601 -1.0101410
+## 734 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.557279878 -1.0101410
+## 735 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.235578732 -1.0101410
+## 736 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.673413787 -1.0101410
+## 737 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.267032849 -1.0101410
+## 738 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.141879867 0.9892209
+## 739 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.174904960 0.9892209
+## 740 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.793121498 0.9892209
+## 741 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.086945506 0.9892209
+## 742 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.248171610 0.9892209
+## 743 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.564364981 0.9892209
+## 744 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.663049021 -1.0101410
+## 745 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.697485486 0.9892209
+## 746 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.089927854 -1.0101410
+## 747 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.600735418 0.9892209
+## 748 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.460827126 0.9892209
+## 749 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.875113081 -1.0101410
+## 750 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.034699353 0.9892209
+## 751 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.699125318 -1.0101410
+## 752 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.276868664 0.9892209
+## 753 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.187501014 0.9892209
+## 754 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.294384212 -1.0101410
+## 755 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.486472977 0.9892209
+## 756 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.494966275 0.9892209
+## 757 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.289464717 -1.0101410
+## 758 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.464629389 -1.0101410
+## 759 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.109609010 0.9892209
+## 760 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.230956553 0.9892209
+## 761 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.642256985 -1.0101410
+## 762 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.743926548 0.9892209
+## 763 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.584337101 0.9892209
+## 764 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.759799089 0.9892209
+## 765 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.900004697 -1.0101410
+## 766 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.190483361 -1.0101410
+## 767 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.268375365 0.9892209
+## 768 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.272769084 -1.0101410
+## 769 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.481850798 -1.0101410
+## 770 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.834708746 -1.0101410
+## 771 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.891511398 0.9892209
+## 772 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.649930368 -1.0101410
+## 773 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.953825001 -1.0101410
+## 774 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.292447064 -1.0101410
+## 775 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.579943382 0.9892209
+## 776 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.437278027 0.9892209
+## 777 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.268375365 0.9892209
+## 778 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.499069030 0.9892209
+## 779 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.599621362 0.9892209
+## 780 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.292447064 0.9892209
+## 781 -0.5662062 -0.6110952 1.7648211 1.9698501
+-1.027091651 0.9892209
+## 782 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.717986557 0.9892209
+## 783 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.870193586 0.9892209
+## 784 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.502345518 -1.0101410
+## 785 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.230133461 -1.0101410
+## 786 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.485947201 -1.0101410
+## 787 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.031717005 0.9892209
+## 788 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.016138605 0.9892209
+## 789 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.336199920 0.9892209
+## 790 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.121904571 -1.0101410
+## 791 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.826215447 -1.0101410
+## 792 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.502345518 0.9892209
+## 793 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.227151114 -1.0101410
+## 794 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.601032734 0.9892209
+## 795 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.206061762 -1.0101410
+## 796 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.354760668 0.9892209
+## 797 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.223054710 0.9892209
+## 798 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.273886316 -1.0101410
+## 799 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.399561898 -1.0101410
+## 800 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.962318300 0.9892209
+## 801 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.735201614 -1.0101410
+## 802 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.870193586 -1.0101410
+## 803 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.371456300 0.9892209
+## 804 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.898368041 -1.0101410
+## 805 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.681087169 0.9892209
+## 806 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.844776196 -1.0101410
+## 807 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.763901844 -1.0101410
+## 808 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.969403402 -1.0101410
+## 809 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.085828275 0.9892209
+## 810 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.790955891 0.9892209
+## 811 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.022400615 -1.0101410
+## 812 1.7648211 -0.6110952 -0.5662062 -0.5072734
+2.013156257 -1.0101410
+## 813 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.582994585 0.9892209
+## 814 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.336199920 0.9892209
+## 815 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.617659510 0.9892209
+## 816 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.130629505 -1.0101410
+## 817 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.055788705 -1.0101410
+## 818 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.055494565 0.9892209
+## 819 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.744220688 -1.0101410
+## 820 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.798040993 -1.0101410
+## 821 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.497951798 0.9892209
+## 822 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-2.130698362 0.9892209
+## 823 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.076515060 -1.0101410
+## 824 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.139942720 -1.0101410
+## 825 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.040210304 0.9892209
+## 826 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.190483361 -1.0101410
+## 827 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.184743950 0.9892209
+## 828 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.432652672 0.9892209
+## 829 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.019120952 0.9892209
+## 830 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.445248725 0.9892209
+## 831 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.399561898 0.9892209
+## 832 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.790955891 -1.0101410
+## 833 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.118102308 -1.0101410
+## 834 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.611100183 0.9892209
+## 835 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.517629778 0.9892209
+## 836 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.870193586 0.9892209
+## 837 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.137188832 0.9892209
+## 838 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.385917469 -1.0101410
+## 839 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.180415911 -1.0101410
+## 840 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.112591357 -1.0101410
+## 841 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.071595565 0.9892209
+## 842 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.977896701 0.9892209
+## 843 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.347087285 -1.0101410
+## 844 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.139942720 -1.0101410
+## 845 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.027614251 0.9892209
+## 846 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.292972840 -1.0101410
+## 847 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.579943382 -1.0101410
+## 848 -0.5662062 1.6351833 -0.5662062 -0.5072734
+3.233191016 0.9892209
+## 849 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.076286601 -1.0101410
+## 850 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.346267369 0.9892209
+## 851 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.019120952 -1.0101410
+## 852 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.268375365 0.9892209
+## 853 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.798040993 -1.0101410
+## 854 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.133680709 -1.0101410
+## 855 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.118102308 -1.0101410
+## 856 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.174379185 -1.0101410
+## 857 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.401201730 -1.0101410
+## 858 1.7648211 -0.6110952 -0.5662062 1.9698501
+-1.071367106 0.9892209
+## 859 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.256896543 -1.0101410
+## 860 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.420353934 0.9892209
+## 861 -0.5662062 -0.6110952 1.7648211 1.9698501
+2.777317813 -1.0101410
+## 862 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.436752251 -1.0101410
+## 863 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.470894576 -1.0101410
+## 864 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.772395143 -1.0101410
+## 865 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.863108484 0.9892209
+## 866 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.125184235 0.9892209
+## 867 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.086651366 0.9892209
+## 868 -0.5662062 -0.6110952 1.7648211 -0.5072734
+2.137783464 0.9892209
+## 869 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.149259110 0.9892209
+## 870 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.043489967 -1.0101410
+## 871 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.907909715 0.9892209
+## 872 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.194057165 -1.0101410
+## 873 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.951659394 0.9892209
+## 874 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.092387601 0.9892209
+## 875 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.445248725 0.9892209
+## 876 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.417074271 -1.0101410
+## 877 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.584337101 -1.0101410
+## 878 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.455316175 0.9892209
+## 879 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.305565718 0.9892209
+## 880 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.190777501 -1.0101410
+## 881 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.678333282 0.9892209
+## 882 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.541701478 0.9892209
+## 883 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.398513523 -1.0101410
+## 884 -0.5662062 -0.6110952 -0.5662062 1.9698501
+1.047295406 -1.0101410
+## 885 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.650750283 0.9892209
+## 886 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.284247906 0.9892209
+## 887 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.276868664 0.9892209
+## 888 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.105506255 -1.0101410
+## 889 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.449054164 0.9892209
+## 890 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.486472977 0.9892209
+## 891 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.619593482 -1.0101410
+## 892 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.266209758 -1.0101410
+## 893 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.086945506 0.9892209
+## 894 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.357223591 0.9892209
+## 895 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.237218563 0.9892209
+## 896 -0.5662062 -0.6110952 1.7648211 -0.5072734
+2.186978414 -1.0101410
+## 897 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.741238341 -1.0101410
+## 898 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.837691093 0.9892209
+## 899 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.573681371 -1.0101410
+## 900 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.336199920 -1.0101410
+## 901 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.336199920 0.9892209
+## 902 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.681910261 0.9892209
+## 903 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.557279878 0.9892209
+## 904 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.014498773 0.9892209
+## 905 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.727528231 -1.0101410
+## 906 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.214555060 -1.0101410
+## 907 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.315110568 0.9892209
+## 908 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.274934692 -1.0101410
+## 909 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.498249114 0.9892209
+## 910 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.994295017 -1.0101410
+## 911 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.385917469 0.9892209
+## 912 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.174904960 0.9892209
+## 913 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.650750283 -1.0101410
+## 914 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.518743834 -1.0101410
+## 915 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.993475101 0.9892209
+## 916 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.545506917 -1.0101410
+## 917 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.619593482 -1.0101410
+## 918 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.273886316 0.9892209
+## 919 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.403955618 -1.0101410
+## 920 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.581583213 -1.0101410
+## 921 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.928701751 -1.0101410
+## 922 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.415960215 -1.0101410
+## 923 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.055197249 0.9892209
+## 924 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.844776196 0.9892209
+## 925 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.223871450 0.9892209
+## 926 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.237218563 0.9892209
+## 927 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.191074817 -1.0101410
+## 928 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.732219267 -1.0101410
+## 929 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.393299888 -1.0101410
+## 930 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.581583213 0.9892209
+## 931 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.601855825 0.9892209
+## 932 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.301171998 -1.0101410
+## 933 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.797515217 0.9892209
+## 934 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.760324865 -1.0101410
+## 935 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.068613218 0.9892209
+## 936 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.518743834 -1.0101410
+## 937 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.152241457 0.9892209
+## 938 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.055788705 -1.0101410
+## 939 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.735201614 0.9892209
+## 940 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.194057165 0.9892209
+## 941 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.222231619 0.9892209
+## 942 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.529703232 -1.0101410
+## 943 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.561382633 -1.0101410
+## 944 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.320621519 0.9892209
+## 945 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.519566926 0.9892209
+## 946 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.842316448 -1.0101410
+## 947 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.842316448 0.9892209
+## 948 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.579943382 0.9892209
+## 949 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.097012956 0.9892209
+## 950 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.157980868 0.9892209
+## 951 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-2.021649556 0.9892209
+## 952 -0.5662062 1.6351833 -0.5662062 1.9698501
+2.006596931 0.9892209
+## 953 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.370339069 -1.0101410
+## 954 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.075989285 0.9892209
+## 955 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.463809474 0.9892209
+## 956 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.447414333 0.9892209
+## 957 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.022400615 0.9892209
+## 958 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.635171883 0.9892209
+## 959 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.704570588 0.9892209
+## 960 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.984981803 0.9892209
+## 961 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.467912228 -1.0101410
+## 962 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.781116901 -1.0101410
+## 963 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.743926548 -1.0101410
+## 964 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.962318300 0.9892209
+## 965 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.000560204 0.9892209
+## 966 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.584337101 0.9892209
+## 967 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.962318300 0.9892209
+## 968 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.868847895 0.9892209
+## 969 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.806534292 0.9892209
+## 970 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.599621362 -1.0101410
+## 971 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.410514944 -1.0101410
+## 972 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.164837511 -1.0101410
+## 973 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.710081539 -1.0101410
+## 974 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.613037331 -1.0101410
+## 975 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.780002845 0.9892209
+## 976 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.273886316 0.9892209
+## 977 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.555643223 0.9892209
+## 978 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.248171610 0.9892209
+## 979 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.530225832 -1.0101410
+## 980 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.121904571 -1.0101410
+## 981 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.853269494 0.9892209
+## 982 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.523140729 0.9892209
+## 983 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.781116901 0.9892209
+## 984 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.012035850 -1.0101410
+## 985 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.089927854 0.9892209
+## 986 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.797515217 -1.0101410
+## 987 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.089927854 0.9892209
+## 988 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.494966275 -1.0101410
+## 989 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.657835386 0.9892209
+## 990 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.663346337 -1.0101410
+## 991 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.781414217 -1.0101410
+## 992 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.463809474 -1.0101410
+## 993 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.153587149 -1.0101410
+## 994 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.392476796 0.9892209
+## 995 1.7648211 -0.6110952 -0.5662062 1.9698501
+-1.741238341 -1.0101410
+## 996 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.211572713 -1.0101410
+## 997 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.563545065 -1.0101410
+## 998 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.014498773 -1.0101410
+## 999 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.922668200 -1.0101410
+## 1000 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.619593482 -1.0101410
+## 1001 1.7648211 -0.6110952 -0.5662062 1.9698501
+-1.258307915 0.9892209
+## 1002 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.333968632 0.9892209
+## 1003 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.797515217 0.9892209
+## 1004 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.174379185 0.9892209
+## 1005 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.881443948 0.9892209
+## 1006 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.174904960 0.9892209
+## 1007 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.230133461 0.9892209
+## 1008 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.401495870 0.9892209
+## 1009 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.931161498 0.9892209
+## 1010 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.479387874 0.9892209
+## 1011 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.289464717 -1.0101410
+## 1012 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.727299772 0.9892209
+## 1013 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.437278027 -1.0101410
+## 1014 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.268375365 0.9892209
+## 1015 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.502345518 -1.0101410
+## 1016 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.853269494 0.9892209
+## 1017 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.993475101 -1.0101410
+## 1018 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.579943382 -1.0101410
+## 1019 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.844776196 -1.0101410
+## 1020 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.330688968 -1.0101410
+## 1021 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.039096248 0.9892209
+## 1022 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.058476912 -1.0101410
+## 1023 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.888231735 0.9892209
+## 1024 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.204193471 0.9892209
+## 1025 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.403436194 -1.0101410
+## 1026 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.645536648 -1.0101410
+## 1027 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.759799089 0.9892209
+## 1028 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.959335952 0.9892209
+## 1029 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.153587149 0.9892209
+## 1030 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-2.193011965 -1.0101410
+## 1031 1.7648211 -0.6110952 -0.5662062 1.9698501
+-1.149259110 -1.0101410
+## 1032 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.743926548 -1.0101410
+## 1033 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.448231073 -1.0101410
+## 1034 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.491983928 0.9892209
+## 1035 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.265393018 0.9892209
+## 1036 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.256668084 -1.0101410
+## 1037 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.050575070 0.9892209
+## 1038 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.027614251 -1.0101410
+## 1039 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.292447064 0.9892209
+## 1040 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.557279878 0.9892209
+## 1041 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.432652672 -1.0101410
+## 1042 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.242729515 0.9892209
+## 1043 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.003542551 0.9892209
+## 1044 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.797515217 -1.0101410
+## 1045 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.751305791 0.9892209
+## 1046 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.977896701 -1.0101410
+## 1047 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.915583097 -1.0101410
+## 1048 -0.5662062 1.6351833 -0.5662062 1.9698501
+3.593953983 0.9892209
+## 1049 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.336199920 -1.0101410
+## 1050 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.038798932 0.9892209
+## 1051 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.031717005 -1.0101410
+## 1052 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.697485486 0.9892209
+## 1053 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.136663056 0.9892209
+## 1054 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.141582551 0.9892209
+## 1055 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.507562329 -1.0101410
+## 1056 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.494966275 0.9892209
+## 1057 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.289167401 -1.0101410
+## 1058 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.184743950 -1.0101410
+## 1059 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.447414333 -1.0101410
+## 1060 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.517629778 0.9892209
+## 1061 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.220820247 0.9892209
+## 1062 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.446591241 0.9892209
+## 1063 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.717986557 0.9892209
+## 1064 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.339182267 0.9892209
+## 1065 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.830311851 -1.0101410
+## 1066 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.879506801 -1.0101410
+## 1067 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.086651366 0.9892209
+## 1068 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.966421055 0.9892209
+## 1069 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.476405527 0.9892209
+## 1070 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.202782099 -1.0101410
+## 1071 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.050575070 0.9892209
+## 1072 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.128169758 0.9892209
+## 1073 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.097012956 0.9892209
+## 1074 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.292447064 -1.0101410
+## 1075 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-2.021649556 -1.0101410
+## 1076 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.176019016 -1.0101410
+## 1077 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.219180415 -1.0101410
+## 1078 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.759799089 0.9892209
+## 1079 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.166705802 0.9892209
+## 1080 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.491392472 0.9892209
+## 1081 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.456727547 0.9892209
+## 1082 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.463809474 0.9892209
+## 1083 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.756816742 0.9892209
+## 1084 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.137188832 0.9892209
+## 1085 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.027614251 -1.0101410
+## 1086 -0.5662062 -0.6110952 1.7648211 1.9698501
+-2.027388967 -1.0101410
+## 1087 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.276868664 0.9892209
+## 1088 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.143748159 0.9892209
+## 1089 -0.5662062 1.6351833 -0.5662062 -0.5072734
+2.800275457 0.9892209
+## 1090 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.404252934 0.9892209
+## 1091 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.906269883 0.9892209
+## 1092 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.136663056 -1.0101410
+## 1093 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.333968632 0.9892209
+## 1094 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.043192651 -1.0101410
+## 1095 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.497951798 -1.0101410
+## 1096 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.112591357 -1.0101410
+## 1097 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.704570588 -1.0101410
+## 1098 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.509430620 0.9892209
+## 1099 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.034699353 -1.0101410
+## 1100 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.545506917 -1.0101410
+## 1101 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.897022349 -1.0101410
+## 1102 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.338362351 0.9892209
+## 1103 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.357223591 0.9892209
+## 1104 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.888231735 0.9892209
+## 1105 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.141582551 0.9892209
+## 1106 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.094553209 -1.0101410
+## 1107 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.121084655 -1.0101410
+## 1108 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.728642288 -1.0101410
+## 1109 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.108785918 0.9892209
+## 1110 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.691223475 0.9892209
+## 1111 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.268375365 -1.0101410
+## 1112 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.267032849 0.9892209
+## 1113 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.789316059 -1.0101410
+## 1114 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.713063887 -1.0101410
+## 1115 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.009053502 0.9892209
+## 1116 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.329049137 0.9892209
+## 1117 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.167819858 0.9892209
+## 1118 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.437278027 0.9892209
+## 1119 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.834117290 0.9892209
+## 1120 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.756816742 -1.0101410
+## 1121 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.120790515 -1.0101410
+## 1122 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.230956553 0.9892209
+## 1123 1.7648211 -0.6110952 -0.5662062 1.9698501
+1.016138605 -1.0101410
+## 1124 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.283953766 -1.0101410
+## 1125 -0.5662062 -0.6110952 -0.5662062 1.9698501
+1.981999456 -1.0101410
+## 1126 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.915583097 -1.0101410
+## 1127 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.125184235 0.9892209
+## 1128 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.852155438 -1.0101410
+## 1129 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.350366948 0.9892209
+## 1130 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.978194017 -1.0101410
+## 1131 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.114002729 -1.0101410
+## 1132 -0.5662062 -0.6110952 1.7648211 -0.5072734
+2.498546430 0.9892209
+## 1133 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.576961034 0.9892209
+## 1134 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-2.021649556 -1.0101410
+## 1135 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.517629778 0.9892209
+## 1136 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.417074271 -1.0101410
+## 1137 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.928701751 -1.0101410
+## 1138 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.382935122 -1.0101410
+## 1139 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.067790126 0.9892209
+## 1140 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.299532167 -1.0101410
+## 1141 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.050575070 0.9892209
+## 1142 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.317570315 -1.0101410
+## 1143 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.951659394 -1.0101410
+## 1144 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.274934692 0.9892209
+## 1145 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.268375365 0.9892209
+## 1146 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.346267369 0.9892209
+## 1147 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.350366948 0.9892209
+## 1148 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.206061762 -1.0101410
+## 1149 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.502642834 0.9892209
+## 1150 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.563545065 0.9892209
+## 1151 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.058771052 -1.0101410
+## 1152 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.953825001 -1.0101410
+## 1153 -0.5662062 1.6351833 -0.5662062 1.9698501
+0.311010988 -1.0101410
+## 1154 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.844776196 -1.0101410
+## 1155 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.448231073 -1.0101410
+## 1156 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.398513523 -1.0101410
+## 1157 -0.5662062 1.6351833 -0.5662062 1.9698501
+2.331283600 0.9892209
+## 1158 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.227151114 -1.0101410
+## 1159 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.012035850 -1.0101410
+## 1160 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.711427231 -1.0101410
+## 1161 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.642256985 -1.0101410
+## 1162 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.880329892 0.9892209
+## 1163 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.339185443 0.9892209
+## 1164 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.401495870 -1.0101410
+## 1165 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.385917469 -1.0101410
+## 1166 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.744220688 -1.0101410
+## 1167 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.591719519 0.9892209
+## 1168 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.994295017 -1.0101410
+## 1169 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.743926548 0.9892209
+## 1170 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.564364981 -1.0101410
+## 1171 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.541701478 0.9892209
+## 1172 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.649930368 -1.0101410
+## 1173 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.844253596 -1.0101410
+## 1174 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.230133461 0.9892209
+## 1175 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.237218563 0.9892209
+## 1176 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.584337101 -1.0101410
+## 1177 1.7648211 -0.6110952 -0.5662062 1.9698501
+-1.071367106 -1.0101410
+## 1178 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.535142151 -1.0101410
+## 1179 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.688992187 -1.0101410
+## 1180 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.139942720 0.9892209
+## 1181 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.748323443 -1.0101410
+## 1182 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.121084655 -1.0101410
+## 1183 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.059590968 -1.0101410
+## 1184 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.541701478 -1.0101410
+## 1185 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.356400499 -1.0101410
+## 1186 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.164837511 0.9892209
+## 1187 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.813619394 0.9892209
+## 1188 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.330688968 -1.0101410
+## 1189 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.884426296 -1.0101410
+## 1190 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.436752251 -1.0101410
+## 1191 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.346267369 -1.0101410
+## 1192 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.460827126 -1.0101410
+## 1193 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.283953766 -1.0101410
+## 1194 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.969403402 -1.0101410
+## 1195 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.460827126 -1.0101410
+## 1196 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.448231073 -1.0101410
+## 1197 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.105506255 -1.0101410
+## 1198 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.473354323 0.9892209
+## 1199 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.214555060 0.9892209
+## 1200 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.797515217 -1.0101410
+## 1201 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.040210304 0.9892209
+## 1202 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.592539435 0.9892209
+## 1203 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.237218563 0.9892209
+## 1204 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.268375365 0.9892209
+## 1205 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.554820131 -1.0101410
+## 1206 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-2.099541560 0.9892209
+## 1207 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.678333282 -1.0101410
+## 1208 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.448756848 0.9892209
+## 1209 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.837691093 -1.0101410
+## 1210 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.055494565 0.9892209
+## 1211 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.034699353 0.9892209
+## 1212 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.563545065 0.9892209
+## 1213 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.507562329 0.9892209
+## 1214 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.432358532 -1.0101410
+## 1215 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.097012956 -1.0101410
+## 1216 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.390020224 0.9892209
+## 1217 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.915583097 0.9892209
+## 1218 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.086651366 0.9892209
+## 1219 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.645536648 -1.0101410
+## 1220 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.074349453 -1.0101410
+## 1221 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.429670325 -1.0101410
+## 1222 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.933621246 0.9892209
+## 1223 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.879506801 0.9892209
+## 1224 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.023811987 -1.0101410
+## 1225 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.102523907 0.9892209
+## 1226 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.501528778 -1.0101410
+## 1227 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-2.270903969 0.9892209
+## 1228 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.068613218 0.9892209
+## 1229 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.617659510 0.9892209
+## 1230 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.058771052 0.9892209
+## 1231 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.626678584 0.9892209
+## 1232 -0.5662062 -0.6110952 1.7648211 1.9698501
+-1.453447884 -1.0101410
+## 1233 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.993475101 -1.0101410
+## 1234 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.207473134 0.9892209
+## 1235 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.464629389 -1.0101410
+## 1236 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.065856154 0.9892209
+## 1237 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.476405527 -1.0101410
+## 1238 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.401495870 -1.0101410
+## 1239 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.305043118 0.9892209
+## 1240 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.880329892 -1.0101410
+## 1241 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.826215447 0.9892209
+## 1242 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.032536921 0.9892209
+## 1243 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-1.538719130 -1.0101410
+## 1244 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.401201730 -1.0101410
+## 1245 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.437278027 0.9892209
+## 1246 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.043489967 0.9892209
+## 1247 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.813913534 -1.0101410
+## 1248 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.207175818 0.9892209
+## 1249 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.501528778 -1.0101410
+## 1250 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.486472977 0.9892209
+## 1251 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.136663056 0.9892209
+## 1252 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.781414217 0.9892209
+## 1253 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.551540468 0.9892209
+## 1254 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.223574135 -1.0101410
+## 1255 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.482667538 -1.0101410
+## 1256 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.186681098 -1.0101410
+## 1257 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.938246600 -1.0101410
+## 1258 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.494966275 -1.0101410
+## 1259 1.7648211 -0.6110952 -0.5662062 -0.5072734
+1.156344212 0.9892209
+## 1260 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.227151114 -1.0101410
+## 1261 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.663346337 -1.0101410
+## 1262 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.055494565 0.9892209
+## 1263 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.428553093 -1.0101410
+## 1264 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.125184235 -1.0101410
+## 1265 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.439737774 -1.0101410
+## 1266 -0.5662062 1.6351833 -0.5662062 1.9698501
+-1.132040877 0.9892209
+## 1267 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.026794335 -1.0101410
+## 1268 -0.5662062 -0.6110952 -0.5662062 1.9698501
+0.065856154 0.9892209
+## 1269 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.432358532 -1.0101410
+## 1270 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.518743834 0.9892209
+## 1271 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.533208179 0.9892209
+## 1272 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.626678584 -1.0101410
+## 1273 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.843430504 0.9892209
+## 1274 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.500705686 0.9892209
+## 1275 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.590896428 0.9892209
+## 1276 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.141879867 0.9892209
+## 1277 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.043192651 -1.0101410
+## 1278 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.152241457 -1.0101410
+## 1279 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.121084655 0.9892209
+## 1280 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.635171883 -1.0101410
+## 1281 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.437278027 -1.0101410
+## 1282 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.494966275 -1.0101410
+## 1283 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.476405527 -1.0101410
+## 1284 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.103866423 0.9892209
+## 1285 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.924308031 0.9892209
+## 1286 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.040210304 -1.0101410
+## 1287 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-2.193011965 -1.0101410
+## 1288 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.781116901 -1.0101410
+## 1289 -0.5662062 -0.6110952 1.7648211 1.9698501
+1.432655848 0.9892209
+## 1290 -0.5662062 1.6351833 -0.5662062 -0.5072734
+0.599621362 0.9892209
+## 1291 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.756816742 -1.0101410
+## 1292 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.694731598 0.9892209
+## 1293 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-1.222231619 0.9892209
+## 1294 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.806534292 0.9892209
+## 1295 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.900004697 0.9892209
+## 1296 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.420651250 0.9892209
+## 1297 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.744220688 0.9892209
+## 1298 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.681087169 -1.0101410
+## 1299 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.526123077 0.9892209
+## 1300 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.806534292 -1.0101410
+## 1301 -0.5662062 1.6351833 -0.5662062 1.9698501
+-0.049751978 0.9892209
+## 1302 1.7648211 -0.6110952 -0.5662062 1.9698501
+0.034699353 0.9892209
+## 1303 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.617431050 -1.0101410
+## 1304 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.469548884 0.9892209
+## 1305 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.993475101 0.9892209
+## 1306 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.482667538 -1.0101410
+## 1307 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-1.445248725 -1.0101410
+## 1308 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.417074271 0.9892209
+## 1309 -0.5662062 -0.6110952 1.7648211 1.9698501
+-0.075989285 -1.0101410
+## 1310 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.251977048 0.9892209
+## 1311 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.713063887 0.9892209
+## 1312 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.650750283 -1.0101410
+## 1313 -0.5662062 -0.6110952 1.7648211 -0.5072734
+2.006596931 0.9892209
+## 1314 -0.5662062 -0.6110952 1.7648211 1.9698501
+0.661934965 -1.0101410
+## 1315 1.7648211 -0.6110952 -0.5662062 1.9698501
+-1.149259110 -1.0101410
+## 1316 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-0.385917469 0.9892209
+## 1317 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-1.650227684 -1.0101410
+## 1318 -0.5662062 1.6351833 -0.5662062 -0.5072734
+3.684144724 0.9892209
+## 1319 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+1.483490629 0.9892209
+## 1320 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.713063887 -1.0101410
+## 1321 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.065856154 0.9892209
+## 1322 -0.5662062 -0.6110952 -0.5662062 1.9698501
+-0.650750283 0.9892209
+## 1323 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.339185443 0.9892209
+## 1324 -0.5662062 1.6351833 -0.5662062 1.9698501
+1.591719519 -1.0101410
+## 1325 1.7648211 -0.6110952 -0.5662062 -0.5072734
+-0.775377490 0.9892209
+## 1326 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.470894576 0.9892209
+## 1327 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.361845770 -1.0101410
+## 1328 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.103866423 0.9892209
+## 1329 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+-1.055788705 -1.0101410
+## 1330 -0.5662062 -0.6110952 1.7648211 -0.5072734
+1.301469314 0.9892209
+## 1331 -0.5662062 1.6351833 -0.5662062 -0.5072734
+-0.807354207 -1.0101410
+## 1332 -0.5662062 -0.6110952 1.7648211 -0.5072734
+0.448756848 -1.0101410
+## 1333 -0.5662062 -0.6110952 1.7648211 -0.5072734
+2.301766630 -1.0101410
+## 1334 1.7648211 -0.6110952 -0.5662062 -0.5072734
+0.050277754 0.9892209
+## 1335 -0.5662062 -0.6110952 -0.5662062 -0.5072734
+0.206061762 -1.0101410
+## 1336 -0.5662062 1.6351833 -0.5662062 -0.5072734
+1.014498773 -1.0101410
+## 1337 -0.5662062 -0.6110952 1.7648211 -0.5072734
+-0.797515217 -1.0101410
+## 1338 1.7648211 -0.6110952 -0.5662062 1.9698501
+-0.261290263 -1.0101410
+## attr(,&quot;scaled:center&quot;)
+## regionnorthwest regionsoutheast regionsouthwest
+smokeryes bmi sexmale
+## 0.2428999 0.2720478 0.2428999 0.2047833 30.6633969
+0.5052317
+## attr(,&quot;scaled:scale&quot;)
+## regionnorthwest regionsoutheast regionsouthwest
+smokeryes bmi sexmale
+## 0.4289954 0.4451808 0.4289954 0.4036940 6.0981869
+0.5001596</code></pre>
+<pre class="r"><code>cv &lt;- cv.glmnet(ins_preds, y, family = &quot;binomial&quot;)
+lasso_fit &lt;- glmnet(ins_preds,y,family=&quot;binomial&quot;, lambda = cv$lambda.1se)
+coef(lasso_fit)</code></pre>
+<pre><code>## 7 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                        s0
+## (Intercept)     -1.617877
+## regionnorthwest  .       
+## regionsoutheast  .       
+## regionsouthwest  .       
+## smokeryes        3.710491
+## bmi              .       
+## sexmale          .</code></pre>
+<pre class="r"><code>#10 fold CV with lasso variable
+set.seed(1234)
+k=10
+data1&lt;-newinsurance[sample(nrow(newinsurance)),] 
+folds&lt;-cut(seq(1:nrow(newinsurance)),breaks=k,labels=F)
+
+diags&lt;-NULL
+for(i in 1:k){    
+  train&lt;-data1[folds!=i,]
+  test&lt;-data1[folds==i,]
+  truth&lt;-test$y
+  
+  fit&lt;- glm(y~region+smoker, data = newinsurance, family = &quot;binomial&quot;)
+  probs&lt;- predict(fit, newdata = test, type = &quot;response&quot;)
+  diags&lt;-rbind(diags,class_diag(probs, truth))
+}
+summarize_all(diags, mean)</code></pre>
+<pre><code>##         acc      sens      spec   ppv        f1       auc
+## 1 0.8893783 0.6486937 0.9989362 0.996 0.7846042 0.8413101</code></pre>
+<pre><code>- Fit model, compute in-sample classification diagnostics (Accuracy, Sensitivity, Specificity, Precision, AUC), and interpret (5)</code></pre>
+<p><em>The accuracy is 0.889, the sensitivity is 0.65, the specificity is 0.998, the precision is 0.996, and the AUC is 0.85 which is considered good.</em></p>
+<pre><code> - Perform 10-fold (or repeated random sub-sampling) CV with the same model and report average out-of-sample classification diagnostics (Accuracy, Sensitivity, Specificity, Precision, and AUC); interpret AUC and compare with the in-sample metrics (10)</code></pre>
+<p><em>The accuracy is 0.889, the sensitivity is 0.65, the specificity is 0.998, the precision is 0.996, and the AUC is 0.85 which is considered good. This is consistent with the data above.</em></p>
+<pre><code>- Perform LASSO on the same model/variables. Choose lambda to give the simplest model whose accuracy is near that of the best (i.e., `lambda.1se`). Discuss which variables are retained. (5)</code></pre>
+<p><em>The variable retained was the smoker - specifically the nonsmokers.</em></p>
+<pre><code>- Perform 10-fold CV using only the variables lasso selected: compare model&#39;s out-of-sample AUC to that of your logistic regressions above (5)</code></pre>
+<p><em>The accuracy is 0.889, the sensitivity is 0.65, the specificity is 0.998, the precision is 0.996, and the AUC is 0.85 which is considered good. This is consistent with the data above.</em></p>
+</div>
+<div id="where-do-i-find-data-again" class="section level2">
+<h2>Where do I find data again?</h2>
+<p>You can choose ANY datasets you want that meet the above criteria for variables and observations. You can make it as serious as you want, or not, but keep in mind that you will be incorporating this project into a portfolio webpage for your final in this course, so choose something that really reflects who you are, or something that you feel will advance you in the direction you hope to move career-wise, or something that you think is really neat, or whatever. On the flip side, regardless of what you pick, you will be performing all the same tasks, so it doesn't end up being that big of a deal.</p>
+<p>If you are totally clueless and have no direction at all, log into the server and type</p>
+<pre class="r"><code>data(package = .packages(all.available = TRUE))</code></pre>
+<p>This will print out a list of <strong>ALL datasets in ALL packages</strong> installed on the server (a ton)! Scroll until your eyes bleed! Actually, do not scroll that much... To start with something more manageable, just run the command on your own computer, or just run <code>data()</code> to bring up the datasets in your current environment. To read more about a dataset, do <code>?packagename::datasetname</code>.</p>
+<p>If it is easier for you, and in case you don't have many packages installed, a list of R datasets from a few common packages (also downloadable in CSV format) is given at the following website: <a href="https://vincentarelbundock.github.io/Rdatasets/datasets.html" class="uri">https://vincentarelbundock.github.io/Rdatasets/datasets.html</a>.</p>
+<ul>
+<li><p>A good package to download for fun/relevant data is <code>fivethiryeight</code>. Run <code>install.packages(&quot;fivethirtyeight&quot;),</code> load the packages with <code>library(fivethirtyeight)</code>, run <code>data()</code>, and then scroll down to view the datasets. Here is an online list of all 127 datasets (with links to the 538 articles). Lots of sports, politics, current events, etc.</p></li>
+<li><p>If you have already started to specialize (e.g., ecology, epidemiology) you might look at discipline-specific R packages (vegan, epi, respectively). We will be using some tools from these packages later in the course, but they come with lots of data too, which you can explore according to the directions above</p></li>
+<li><p>However, you <em>emphatically DO NOT</em> have to use datasets available via R packages! In fact, I would much prefer it if you found the data from completely separate sources and brought them together (a much more realistic experience in the real world)! You can even reuse data from your SDS328M project, provided it shares a variable in common with other data which allows you to merge the two together (e.g., if you still had the timestamp, you could look up the weather that day: <a href="https://www.wunderground.com/history/" class="uri">https://www.wunderground.com/history/</a>). If you work in a research lab or have access to old data, you could potentially merge it with new data from your lab!</p></li>
+<li><p>Here is a curated list of interesting datasets (read-only spreadsheet format): <a href="https://docs.google.com/spreadsheets/d/1wZhPLMCHKJvwOkP4juclhjFgqIY8fQFMemwKL2c64vk/edit" class="uri">https://docs.google.com/spreadsheets/d/1wZhPLMCHKJvwOkP4juclhjFgqIY8fQFMemwKL2c64vk/edit</a></p></li>
+<li><p>Here is another great compilation of datasets: <a href="https://github.com/rfordatascience/tidytuesday" class="uri">https://github.com/rfordatascience/tidytuesday</a></p></li>
+<li><p>Here is the UCI Machine Learning Repository: <a href="https://archive.ics.uci.edu/ml/index.php" class="uri">https://archive.ics.uci.edu/ml/index.php</a></p>
+<ul>
+<li>See also <a href="https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research#Biological_data" class="uri">https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research#Biological_data</a></li>
+</ul></li>
+<li><p>Here is another good general place to look: <a href="https://www.kaggle.com/datasets" class="uri">https://www.kaggle.com/datasets</a></p></li>
+<li><p>To help narrow your search down or to see interesting variable ideas, check out <a href="https://www.tylervigen.com/spurious-correlations" class="uri">https://www.tylervigen.com/spurious-correlations</a>. This is the spurious correlations website, and it is fun, but if you look at the bottom of each plot you will see sources for the data. This is a good place to find very general data (or at least get a sense of where you can scrape data together from)!</p></li>
+<li><p>If you are interested in medical data, check out www.countyhealthrankings.org</p></li>
+<li><p>If you are interested in scraping UT data, they make <em>loads</em> of data public (e.g., beyond just professor CVs and syllabi). Check out all the data that is available in the statistical handbooks: <a href="https://reports.utexas.edu/statistical-handbook" class="uri">https://reports.utexas.edu/statistical-handbook</a></p></li>
+</ul>
+<div id="broader-data-sources" class="section level5">
+<h5>Broader data sources:</h5>
+<p><a href="www.data.gov">Data.gov</a> 186,000+ datasets!</p>
+<p><a href="Social%20Explorer">Social Explorer</a> is a nice interface to Census and American Community Survey data (more user-friendly than the government sites). May need to sign up for a free trial.</p>
+<p><a href="www.bls.gov">U.S. Bureau of Labor Statistics</a></p>
+<p><a href="www.census.gov">U.S. Census Bureau</a></p>
+<p><a href="www.gapminder.org/data">Gapminder</a>, data about the world.</p>
+<p>...</p>
+</div>
+</div>
+</div>
+
+            
+        <hr>         <div class="related-posts">
+                <h5>Related Posts</h5>
+                
+              </div> 
+            </div>
+          </div>
+
+   <hr>  <div class="disqus">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+
+    (function() {
+      
+      
+      if (window.location.hostname == "localhost")
+        return;
+
+      var disqus_shortname = '';
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  <a href="http://disqus.com/" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div> 
+        </div>
+      </div>
+    </div>
+
+    
+    <footer>
+  <div id="footer">
+    <div class="container">
+      <p class="text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io/">Hugo</a> and
+      <a href="http://www.github.com/nurlansu/hugo-sustain/">sustain</a> with ♥</p>
+    </div>
+  </div>
+</footer>
+<div class="footer"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="../../js/docs.min.js"></script>
+<script src="../../js/main.js"></script>
+
+<script src="../../js/ie10-viewport-bug-workaround.js"></script>
+
+
+    
+  </body>
+</html>

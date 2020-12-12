@@ -1,0 +1,33 @@
+---
+title: "Blog"
+author: "Malerie Dozier"
+date: 2020-12-11T21:13:14-05:00
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+# R Studio and Python
+
+R Studio and Python can communicate together and can perform similar functions. Below is an example of using R Studio and Python to achieve similar results. Using R Studio, one can switch from R to Python easily. 
+
+Example:
+
+```{r cars}
+data("quakes")
+summary(quakes)
+median(quakes$depth)
+```
+```{python}
+import pandas as pd
+quakes=pd.read_csv("https://vincentarelbundock.github.io/Rdatasets/csv/datasets/quakes.csv",index_col=0)
+import numpy as np
+quakes["depth"].median()
+
+```
+
+
+```
